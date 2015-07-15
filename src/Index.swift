@@ -6,7 +6,7 @@ class Index {
   private let formatter: NSDateFormatter = NSDateFormatter()
 
   init() {
-    formatter.dateFormat = "yyyy-mm-dd'T'HH-mm-ss'Z'"
+    formatter.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
   }
 
   func packPackages(packages: [Package]) {
