@@ -13,16 +13,18 @@ class Package {
 
   // From package's Roostfile.yaml
   var name: String
+  var version: SemVer // Current version of the package
 
   // From package's Metadata.yaml
   var versions: [Version]
-  
-  init(name: String, versions: [Version]) {
+
+  init(name: String, version: SemVer, versions: [Version]) {
     self.name     = name
+    self.version  = version
     self.versions = versions
   }
 
-  
+
 
 // Class functions
 
@@ -38,14 +40,16 @@ class Package {
       printAndExit("Missing \(roostfilePath)")
     }
 
-    let roostfileName = parseRoostfile(readFile(roostfilePath))
+    let (roostfileName, roostfileVersion) = parseRoostfile(readFile(roostfilePath))
 
     assert(roostfileName == name, "Roostfile.yaml's name doesn't equal directory name (\(name))")
 
-    return Package(name: roostfileName, versions: [Version]())
+    return Package(name: roostfileName,
+                   version: roostfileVersion,
+                   versions: [Version]())
   }
 
-  private class func parseRoostfile(contents: String) -> (String) {
+  private class func parseRoostfile(contents: String) -> (String, SemVer) {
     let result = Yaml.load(contents)
 
     if let error = result.error {
@@ -55,7 +59,13 @@ class Package {
     let roostfile = result.value!
     let name = roostfile["name"].string!
 
-    return name
+    let (error, version) = SemVer.parse(roostfile["version"].string!)
+
+    if let error = error {
+      printAndExit(error)
+    }
+
+    return (name, version!)
   }
 
   class func scanPackagesDirectory() -> [String] {

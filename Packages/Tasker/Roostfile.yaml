@@ -1,4 +1,5 @@
 name: Tasker
+version: 0.0.1
 sources:
   - Tasker.swift
 target_type: module
