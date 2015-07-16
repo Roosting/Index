@@ -2,3 +2,6 @@
 bin
 build
 vendor
+
+# Ignore compiled index files
+Index-*
