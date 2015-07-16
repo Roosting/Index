@@ -6,7 +6,7 @@ let fileManager = NSFileManager.defaultManager()
 
 struct Version {
   var version: SemVer
-  var descriptor: AnyObject
+  var description: String
 }
 
 class Package {
