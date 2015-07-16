@@ -37,9 +37,21 @@ class Index {
 
   private func packedPackage(package: Package) -> MessagePackValue {
     return MessagePackValue.Map([
-      .String("name")    : .String(package.name),
-      .String("version") : .String(package.version.description)
+      .String("name")     : .String(package.name),
+      .String("version")  : .String(package.version.description),
+      .String("versions") : packPackageVersions(package.versions),
     ])
+  }
+
+  private func packPackageVersions(versions: [Version]) -> MessagePackValue {
+    let versionsValues = versions.map { (v) in
+      return MessagePackValue.Map([
+        .String("version")     : .String(v.version.description),
+        .String("description") : .String(v.description),
+      ])
+    }
+
+    return MessagePackValue.Array(versionsValues)
   }
 
   private func getOutputName() -> String {
