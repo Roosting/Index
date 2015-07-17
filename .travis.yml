@@ -1,0 +1,20 @@
+language: objective-c
+osx_image: beta-xcode6.3
+
+before_install:
+  - "sudo xcode-select --install || true"
+  - "brew install carthage"
+  # Setup our vendored Roost
+  - "cd vendor"
+  - "git clone git@github.com:dirk/Roost.git && cd Roost"
+  # Bootstrap and build Roost
+  - "cd vendor && carthage bootstrap --platform mac"
+  - "cd .. && make"
+  # Get our own Carthage dependencies
+  - "cd .. && carthage bootstrap --platform mac"
+  # Return to the base directory
+  - "cd .."
+
+before_script: "vendor/Roost/bin/roost build"
+
+script: "bin/roost.index"
