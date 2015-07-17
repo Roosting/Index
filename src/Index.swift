@@ -43,6 +43,10 @@ class Index {
     ])
   }
 
+  /**
+    Convert Array of Version structs into a MessagePackValue.Array of
+    MessagePackValue.Map instances.
+  */
   private func packPackageVersions(versions: [Version]) -> MessagePackValue {
     let versionsValues = versions.map { (v) in
       return MessagePackValue.Map([
@@ -54,6 +58,9 @@ class Index {
     return MessagePackValue.Array(versionsValues)
   }
 
+  /**
+    Timestamped name of the file to which to write the packed index.
+  */
   private func getOutputName() -> String {
     let date = formatter.stringFromDate(NSDate())
 
