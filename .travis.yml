@@ -4,7 +4,7 @@ osx_image: beta-xcode6.3
 before_install:
   - "sudo xcode-select --install || true"
   - "brew install carthage"
-  - "git config --global credential.https://github.com.username `echo $GITHUB_USERNAME`"
+  - "git config --global credential.https://github.com.username `echo $GITHUB_USER`"
   # Setup our vendored Roost
   - "cd vendor"
   - "git clone https://github.com/dirk/Roost.git"
