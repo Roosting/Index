@@ -4,9 +4,11 @@ osx_image: beta-xcode6.3
 before_install:
   - "sudo xcode-select --install || true"
   - "brew install carthage"
+  - "brew install hub"
+  - "git config --global hub.protocol https"
   # Setup our vendored Roost
   - "cd vendor"
-  - 'git clone `echo "https://$AUTH_TOKEN@github.com/Roosting/Index.git"`'
+  - "hub clone dirk/Roost"
   - "cd Roost"
   # Bootstrap and build Roost
   - "cd vendor && carthage bootstrap --platform mac"
