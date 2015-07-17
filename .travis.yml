@@ -6,7 +6,8 @@ before_install:
   - "brew install carthage"
   # Setup our vendored Roost
   - "cd vendor"
-  - "git clone git@github.com:dirk/Roost.git && cd Roost"
+  - 'git clone `echo "https://$AUTH_TOKEN@github.com/Roosting/Index.git"`'
+  - "cd Roost"
   # Bootstrap and build Roost
   - "cd vendor && carthage bootstrap --platform mac"
   - "cd .. && make"
