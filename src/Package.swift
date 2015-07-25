@@ -32,29 +32,27 @@ class Package {
     let roostfilePath = "packages/\(name)/Roostfile.yaml"
     let metadataPath  = "packages/\(name)/Metadata.yaml"
 
-    if fileManager.fileExistsAtPath(metadataPath) {
-      // TODO: Implement me!
+    if !fileManager.fileExistsAtPath(metadataPath) {
+      printAndExit("Missing \(metadataPath)")
     }
-
     if !fileManager.fileExistsAtPath(roostfilePath) {
       printAndExit("Missing \(roostfilePath)")
     }
 
+    let (versions) = parseMetadata(readFile(metadataPath))
     let (roostfileName, roostfileVersion) = parseRoostfile(readFile(roostfilePath))
 
     assert(roostfileName == name, "Roostfile.yaml's name doesn't equal directory name (\(name))")
 
     return Package(name: roostfileName,
                    version: roostfileVersion,
-                   versions: [Version]())
+                   versions: versions)
   }
 
   private class func parseRoostfile(contents: String) -> (String, SemVer) {
     let result = Yaml.load(contents)
 
-    if let error = result.error {
-      printAndExit(error)
-    }
+    if let error = result.error { printAndExit(error) }
 
     let roostfile = result.value!
     let name = roostfile["name"].string!
@@ -66,6 +64,25 @@ class Package {
     }
 
     return (name, version!)
+  }
+
+  private class func parseMetadata(contents: String) -> [Version] {
+    let result = Yaml.load(contents)
+
+    if let error = result.error { printAndExit(error) }
+
+    let metadata = result.value!
+    let versions: [Yaml] = metadata["versions"].array!
+
+    return versions.map { (v: Yaml) -> Version in
+      let description = v["description"].string!
+
+      let (error, version) = SemVer.parse(v["version"].string!)
+
+      if let error = error { printAndExit(error) }
+
+      return Version(version: version!, description: description)
+    }
   }
 
   class func scanPackagesDirectory() -> [String] {
