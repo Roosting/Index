@@ -40,7 +40,7 @@ class Package {
     }
 
     let (versions) = parseMetadata(readFile(metadataPath))
-    let (roostfileName, roostfileVersion) = parseRoostfile(readFile(roostfilePath))
+    let (roostfileName, roostfileVersion) = parseRoostfile(roostfilePath)
 
     assert(roostfileName == name, "Roostfile.yaml's name doesn't equal directory name (\(name))")
 
@@ -49,13 +49,22 @@ class Package {
                    versions: versions)
   }
 
-  private class func parseRoostfile(contents: String) -> (String, SemVer) {
+  private class func parseRoostfile(path: String) -> (String, SemVer) {
+    var name: String!
+    let roostfile: Yaml
+
+    let contents = readFile(path)
     let result = Yaml.load(contents)
 
     if let error = result.error { printAndExit(error) }
 
-    let roostfile = result.value!
-    let name = roostfile["name"].string!
+    roostfile = result.value!
+
+    if let hasName = roostfile["name"].string {
+      name = hasName
+    } else {
+      printAndExit("Failed finding name in package's Roostfile")
+    }
 
     let (error, version) = SemVer.parse(roostfile["version"].string!)
 
