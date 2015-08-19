@@ -4,16 +4,15 @@ osx_image: beta-xcode6.3
 before_install:
   - "sudo xcode-select --install || true"
   - "brew install carthage"
-  - "git config --global credential.https://github.com.username `echo $GITHUB_USER`"
   # Setup our vendored Roost
   - "cd vendor"
   - "git clone https://github.com/dirk/Roost.git"
   - "cd Roost"
   # Bootstrap and build Roost
-  - "cd vendor && carthage bootstrap --platform mac"
+  - "cd vendor && carthage bootstrap --platform mac --no-use-binaries"
   - "cd .. && make"
   # Get our own Carthage dependencies
-  - "cd .. && carthage bootstrap --platform mac"
+  - "cd .. && carthage bootstrap --platform mac --no-use-binaries"
   # Return to the base directory
   - "cd .."
 
