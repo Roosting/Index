@@ -94,18 +94,18 @@ class Package {
     }
   }
 
-  class func scanPackagesDirectory() -> [String] {
+  class func scanPackagesDirectory() -> [String]! {
     var packages = [String]()
-    var error: NSError?
 
-    let contents = fileManager.contentsOfDirectoryAtPath("Packages", error: &error)
-
-    if error != nil {
-      printAndExit(error!.description)
+    let contents: [String]
+    do {
+      contents = try fileManager.contentsOfDirectoryAtPath("Packages")
+    } catch {
+      printAndExit(error); return nil
     }
 
-    for anyContent in contents! {
-      let content = anyContent as! NSString
+    for anyContent in contents {
+      let content = anyContent as NSString
 
       packages.append(content as String)
     }
