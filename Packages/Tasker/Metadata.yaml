@@ -1,3 +1,5 @@
 versions:
   - version: 0.0.1
     description: github:dirk/Tasker#v0.0.1
+  - version: 1.0.1
+    description: github:dirk/Tasker#v1.0.1
